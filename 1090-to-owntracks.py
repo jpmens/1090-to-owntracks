@@ -30,8 +30,9 @@ def get_aircraft():
                         "lon"       : craft['lon'],
                         "vel"       : int(craft.get('speed', 0) * 1.852),
                         "cog"       : craft.get('track', 0),
-                        "alt"       : craft.get('altitude', 0),
-                        "name"      : craft['flight'],
+                        "alt"       : int(craft.get('altitude', 0) / 3.2808),
+                        "roc"       : int(craft.get('vert_rate', 0) / 3.2808 / 60),
+                        "name"      : craft['flight'].rstrip(),
                     })
 
     return overhead
@@ -52,5 +53,4 @@ while True:
 
 
     time.sleep(10)
-
 
