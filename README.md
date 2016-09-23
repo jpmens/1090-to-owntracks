@@ -18,12 +18,12 @@ Data is published to the MQTT topic `ot/flights/<flightnumber>` in [OwnTracks-co
   "vel": 877,
   "name": "KLM1963"
 }
-```json
+```
 
 ## Hardware
 
-1. Start [from this](http://blog.wenzlaff.de/?p=4005). If you get stuck, read [this long English page](http://www.satsignal.eu/raspberry-pi/dump1090.html)
-2. Instead of the dump1090 git repo he recommends, use [tedsluis-dump1090](https://github.com/tedsluis/dump1090)
+* Start [from this](http://blog.wenzlaff.de/?p=4005). If you get stuck, read [this long English page](http://www.satsignal.eu/raspberry-pi/dump1090.html)
+* Instead of the dump1090 git repo he recommends, use [tedsluis-dump1090](https://github.com/tedsluis/dump1090)
 
 ### My Rpi
 
