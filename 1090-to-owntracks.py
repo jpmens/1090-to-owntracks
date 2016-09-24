@@ -22,7 +22,7 @@ def get_aircraft():
         # {"hex":"4b9064","squawk":"3257","flight":"PGT6FT  ","lat":51.883633,"lon":8.310699,"nucp":7,"seen_pos":2.6,"altitude":35975,"vert_rate":0,"track":277,"speed":393,"category":"A0","messages":123,"seen":1.3,"rssi":-34.3}
 
             if 'flight' in craft and 'lat' in craft:
-                overhead.append({
+                plane = {
                         "_type"     : 'location',
                         "tst"       : int(time.time()),
                         "flight"    : craft['flight'].rstrip(),
@@ -33,7 +33,10 @@ def get_aircraft():
                         "alt"       : int(craft.get('altitude', 0) / 3.2808),
                         "roc"       : int(craft.get('vert_rate', 0) / 3.2808 / 60), # rate of climb m/s
                         "name"      : craft['flight'].rstrip(),
-                    })
+                    }
+                if 'squawk' in craft:
+                    plane['squawk']     = craft.get('squawk')
+                overhead.append(plane)
 
     return overhead
 
