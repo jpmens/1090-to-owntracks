@@ -15,7 +15,10 @@ def get_aircraft():
     overhead = []
 
     r = requests.get(url)
-    data = json.loads(r.text)
+    try:
+        data = json.loads(r.text)
+    except:
+        return overhead
 
     if 'aircraft' in data:
         for craft in data['aircraft']:
