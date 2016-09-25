@@ -5,13 +5,41 @@ import paho.mqtt.client as paho   # pip install paho-mqtt
 import requests
 import json
 import time
+import argparse
 
 __author__    = 'Jan-Piet Mens <jpmens()gmail.com>'
 __copyright__ = 'Copyright 2016 Jan-Piet Mens'
 __license__   = """GPL2"""
 
+if __name__ == "__main__":
+    try:
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--url', 
+                help='URL of feed (e.g. http://localhost/data/aircraft.json)', 
+                dest='url', 
+                default="http://localhost:8080/data/aircraft.json") 
+        parser.add_argument('--mqtthost', 
+                help='MQTT host (e.g. test.mosquitto.org)', 
+                dest='mqtthost', 
+                default="test.mosquitto.org") 
+        parser.add_argument('--mqttport', 
+                help='MQTT port (e.g. 1883)', 
+                dest='mqttport', 
+                default=1883) 
+        parser.add_argument('--topic',
+                help='MQTT topic (e.g. ot/flights)',
+                dest='topic',
+                default="ot/flights")
+
+        args = parser.parse_args()
+
+    except IOError as e:
+        print(e)
+        sys.exit(1)
+
+
 def get_aircraft():
-    url = 'http://localhost:8080/data/aircraft.json'
+    url = args.url
     overhead = []
 
     r = requests.get(url)
@@ -44,13 +72,13 @@ def get_aircraft():
     return overhead
 
 mqttc = paho.Client(client_id=None, clean_session=True, userdata=None, protocol=paho.MQTTv311)
-mqttc.connect("test.mosquitto.org", 1883, 60)
+mqttc.connect(args.mqtthost, args.mqttport, 60)
 mqttc.loop_start()
 
 while True:
     overhead = get_aircraft()
     for aircraft in overhead:
-        topic = 'ot/flights/%s' % aircraft['flight']
+        topic = '%s/%s' % ( args.topic, aircraft['flight'] )
 
         aircraft['_geoprec']    = 2
 
