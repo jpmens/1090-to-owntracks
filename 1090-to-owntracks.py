@@ -95,11 +95,11 @@ if args.awsiot:
     mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
 
     mqttc.connect(args.awshost, awsport, 60)
-    mqttc.loop_start()
 else:
     mqttc = paho.Client(client_id=None, clean_session=True, userdata=None, protocol=paho.MQTTv311)
     mqttc.connect(args.mqtthost, args.mqttport, 60)
-    mqttc.loop_start()
+
+mqttc.loop_start()
 
 while True:
     overhead = get_aircraft()
