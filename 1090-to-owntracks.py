@@ -104,7 +104,7 @@ else:
 while True:
     overhead = get_aircraft()
     for aircraft in overhead:
-        topic = '%s/%s' % (args.topic, aircraft['flight'])
+        topic = '%s/%s' % ( args.topic, aircraft['flight'] )
 
         aircraft['_geoprec']    = 2
 
