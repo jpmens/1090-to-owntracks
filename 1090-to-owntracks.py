@@ -61,12 +61,15 @@ def get_aircraft():
                         "lon"       : craft['lon'],
                         "vel"       : int(craft.get('speed', 0) * 1.852),
                         "cog"       : craft.get('track', 0),
-                        "alt"       : int(craft.get('altitude', 0) / 3.2808),
                         "roc"       : int(craft.get('vert_rate', 0) / 3.2808 / 60), # rate of climb m/s
                         "name"      : craft['flight'].rstrip(),
                     }
                 if 'squawk' in craft:
                     plane['squawk']     = craft.get('squawk')
+                try:
+                    plane['alt']    = int(craft.get('altitude', 0) / 3.2808) # could be 'ground'
+                except:
+                    plane['alt']    = 0
                 overhead.append(plane)
 
     return overhead
