@@ -6,6 +6,8 @@ import requests
 import json
 import time
 import argparse
+import sys
+import ssl
 
 __author__    = 'Jan-Piet Mens <jpmens()gmail.com>'
 __copyright__ = 'Copyright 2016 Jan-Piet Mens'
@@ -30,6 +32,16 @@ if __name__ == "__main__":
                 help='MQTT topic (e.g. ot/flights)',
                 dest='topic',
                 default="ot/flights")
+        parser.add_argument('--awsiot',
+                action='store_true',
+                help='Send to AWS IOT')
+        parser.add_argument('--awshost',
+                help='AWS host (e.g. data.iot.us-east-1.amazonaws.com)',
+                dest='awshost',
+                default="data.iot.us-east-1.amazonaws.com")
+        parser.add_argument('--awsdir',
+                help="AWS credentials directory (e.g $HOME/.aws/iot)",
+                dest='awsdir')
 
         args = parser.parse_args()
 
@@ -74,8 +86,22 @@ def get_aircraft():
 
     return overhead
 
-mqttc = paho.Client(client_id=None, clean_session=True, userdata=None, protocol=paho.MQTTv311)
-mqttc.connect(args.mqtthost, args.mqttport, 60)
+if args.awsiot:
+    awsport = 8883
+    # clientId = "myThingName"
+    # thingName = "myThingName"
+    caPath = "%s/aws-iot-rootCA.crt" % args.awsdir
+    certPath = "%s/cert.pem" % args.awsdir
+    keyPath = "%s/privatekey.pem" % args.awsdir
+
+    mqttc = paho.Client()
+    mqttc.tls_set(caPath, certfile=certPath, keyfile=keyPath, cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLSv1_2, ciphers=None)
+
+    mqttc.connect(args.awshost, awsport, 60)
+else:
+    mqttc = paho.Client(client_id=None, clean_session=True, userdata=None, protocol=paho.MQTTv311)
+    mqttc.connect(args.mqtthost, args.mqttport, 60)
+
 mqttc.loop_start()
 
 while True:
